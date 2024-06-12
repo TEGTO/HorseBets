@@ -1,0 +1,24 @@
+﻿.table-responsive {
+  max-height: 270px;
+}
+
+.card-body {
+  width: 100%;
+  height: 356px;
+  box-sizing: border-box;
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.wrapper {
+  height: 100%;
+}

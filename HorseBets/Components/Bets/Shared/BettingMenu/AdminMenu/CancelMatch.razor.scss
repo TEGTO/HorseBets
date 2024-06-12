@@ -1,0 +1,20 @@
+﻿@use "../../../bet-styles";
+
+.match-grid {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    margin-bottom: 50px;
+}
+
+.match-content {
+    height: 150px;
+    padding: 0 20px 0 20px;
+}
+
+.wrapper {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 100%;
+}

@@ -1,0 +1,26 @@
+﻿@use '../../bet-styles';
+
+.card {
+    height: 100%;
+    width: 100%;
+}
+
+.card-body {
+}
+.body-wrapper
+{
+    display: flex;
+    flex-direction: column;
+}
+.table-wrapper {
+    max-height:270px;
+    overflow-y: scroll;
+}
+.card-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+.card-footer .alert-success {
+    padding: 5px;
+}

@@ -1,0 +1,89 @@
+﻿@using HorseBets.Bets.Services
+@using HorseBets.Components.Shared
+@using HorseBets.Data
+@using Microsoft.AspNetCore.Identity
+
+@inject IBetService BetService
+@inject IJSRuntime JSRuntime
+@inject ILogger<CancelMatch> Logger
+
+@implements IAsyncDisposable
+@inherits CancellableComponent
+
+<div class="betting-menu-container container">
+    <fieldset class="border rounded-3 p-3">
+        <legend class="betting-menu-legend float-none w-auto px-3">Client</legend>
+        <fieldset class="border rounded-3 p-3 wrapper">
+            <legend class="float-none w-auto px-3">Matches</legend>
+            <div class="menu-content" id="bet-scroll">
+                @if (clientBets.Count == 0)
+                {
+                    <p>No bets 😔</p>
+                }
+                else
+                {
+                    @foreach (var bet in clientBets)
+                    {
+                        <ClientBet Bet="bet"></ClientBet>
+                    }
+                }
+            </div>
+        </fieldset>
+    </fieldset>
+</div>
+
+@code {
+    [Parameter]
+    public int ItemsOnPage { get; set; } = 8;
+    [Parameter]
+    public Client Client { get; set; } = null!;
+
+    private List<Bet> clientBets = new List<Bet>();
+    private IJSObjectReference? module;
+    private int page;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await OnScrollDivEnd();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                module = await JSRuntime.InvokeAsync<IJSObjectReference>(
+                "import", "./scripts/divScrollEnd.js");
+                await module.InvokeVoidAsync("checkDivScrollEnd", "bet-scroll", "OnScrollDivEnd",
+                DotNetObjectReference.Create(this));
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.Message);
+            }
+        }
+    }
+    [JSInvokable]
+    public async Task OnScrollDivEnd()
+    {
+        page++;
+        await AddNewItems(page);
+    }
+    private async Task AddNewItems(int page)
+    {
+        clientBets.AddRange(await BetService.GetBetsByClientOnPageAsync(Client, page, ItemsOnPage, cancellationToken: CancellationToken));
+        StateHasChanged();
+    }
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (module != null)
+                await module.DisposeAsync();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex.Message);
+        }
+    }
+}

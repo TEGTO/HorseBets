@@ -1,0 +1,90 @@
+﻿[
+  {
+    "outputFile": "Components/Shared/Bets/Matches.razor.css",
+    "inputFile": "Components/Shared/Bets/Matches.razor.scss"
+  },
+  {
+    "outputFile": "Components/Layout/MainLayout.razor.css",
+    "inputFile": "Components/Layout/MainLayout.razor.scss"
+  },
+  {
+    "outputFile": "Components/Shared/Bets/Match.razor.css",
+    "inputFile": "Components/Shared/Bets/Match.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/Matches.razor.css",
+    "inputFile": "Components/Bets/Shared/Matches.razor.scss"
+  },
+  {
+    "outputFile": "Components/Shared/TopRow.razor.css",
+    "inputFile": "Components/Shared/TopRow.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/Match.razor.css",
+    "inputFile": "Components/Bets/Shared/Match.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/AdminMenu.razor.css",
+    "inputFile": "Components/Bets/Shared/AdminMenu.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/CreateMatch.razor.css",
+    "inputFile": "Components/Bets/Shared/CreateMatch.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/Betting/CreateMatch.razor.css",
+    "inputFile": "Components/Bets/Shared/Betting/CreateMatch.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/Betting/AdminMenu.razor.css",
+    "inputFile": "Components/Bets/Shared/Betting/AdminMenu.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/BettingMenu/AdminMenu.razor.css",
+    "inputFile": "Components/Bets/Shared/BettingMenu/AdminMenu.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/BettingMenu/CancelMatch.razor.css",
+    "inputFile": "Components/Bets/Shared/BettingMenu/CancelMatch.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/BettingMenu/CreateMatch.razor.css",
+    "inputFile": "Components/Bets/Shared/BettingMenu/CreateMatch.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/Matches/Match.razor.css",
+    "inputFile": "Components/Bets/Shared/Matches/Match.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Pages/Matches.razor.css",
+    "inputFile": "Components/Bets/Pages/Matches.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/BettingMenu/ClientMenu/ClientMenu.razor.css",
+    "inputFile": "Components/Bets/Shared/BettingMenu/ClientMenu/ClientMenu.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/BettingMenu/AdminMenu/AdminMenu.razor.css",
+    "inputFile": "Components/Bets/Shared/BettingMenu/AdminMenu/AdminMenu.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Pages/BettingMenu.razor.css",
+    "inputFile": "Components/Bets/Pages/BettingMenu.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/BettingMenu/ClientMenu/ClientMatch.razor.css",
+    "inputFile": "Components/Bets/Shared/BettingMenu/ClientMenu/ClientMatch.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/BettingMenu/AdminMenu/CancelMatch.razor.css",
+    "inputFile": "Components/Bets/Shared/BettingMenu/AdminMenu/CancelMatch.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/BettingMenu/AdminMenu/CreateMatch.razor.css",
+    "inputFile": "Components/Bets/Shared/BettingMenu/AdminMenu/CreateMatch.razor.scss"
+  },
+  {
+    "outputFile": "Components/Bets/Shared/Matches/MatchDate.razor.css",
+    "inputFile": "Components/Bets/Shared/Matches/MatchDate.razor.scss"
+  }
+]

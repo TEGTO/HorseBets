@@ -1,0 +1,27 @@
+﻿@using HorseBets.Bets.Models
+@using HorseBets.Components.Bets.Shared
+
+@rendermode InteractiveServer
+
+<div class="betting-menu-container container">
+    <fieldset class="border rounded-3 p-3">
+        <legend class="betting-menu-legend float-none w-auto px-3">Admin</legend>
+        <div class="menu-content">
+            <div class="create-match">
+                <CreateMatch MinimumNumberOfHorses="3" OnCreate="AddMatch"></CreateMatch>
+            </div>
+            <div class="cancel-matches">
+                <CancelMatch ItemsOnPage="12" Matches="matches"></CancelMatch>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+@code {
+    private List<Match> matches = new List<Match>();
+
+    private void AddMatch(Match match)
+    {
+        matches = matches.Prepend(match).ToList();
+    }
+}

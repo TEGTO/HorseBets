@@ -1,0 +1,38 @@
+﻿@page "/bettingmenu"
+@using HorseBets.Bets.Services
+@using HorseBets.Components.Account
+@using HorseBets.Components.Bets.Shared
+@using HorseBets.Data
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+
+@rendermode InteractiveServer
+
+@inherits GetClient
+
+@attribute [Authorize]
+
+<PageTitle>Betting Menu</PageTitle>
+
+ @if (Client != null)
+{
+    <div class="betting-menu">
+        <AuthorizeView Roles="@adminName">
+            <AdminMenu></AdminMenu>
+        </AuthorizeView>
+        <AuthorizeView Roles="@bookmakerName">
+        </AuthorizeView>
+        <AuthorizeView Roles="@clientName">
+            <ClientMenu Client="@Client"></ClientMenu>
+        </AuthorizeView>
+    </div>
+}
+
+
+@code
+{
+    private string adminName = Enum.GetName(Roles.Administrator)!;
+    private string bookmakerName = Enum.GetName(Roles.Bookmaker)!;
+    private string clientName = Enum.GetName(Roles.Client)!;
+
+}

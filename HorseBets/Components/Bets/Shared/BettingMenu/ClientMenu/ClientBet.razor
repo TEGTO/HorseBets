@@ -1,0 +1,27 @@
+﻿@using HorseBets.Components.Bets.Shared.Matches
+<div class="card text-center">
+    <div class="card-header">
+        <b>
+            <span id="match-id">Match #@Bet.Match.Id</span>
+            <span id="match-status" class="circle match-active"></span>
+        </b>
+    </div>
+    <div class="card-body">
+        <MatchDate Date="@Bet.Match.StartTime" />
+        <label for="bet">Bet 💰</label>
+        <input id="bet" class="form-control mb-2" type="text" readonly value="@Bet.BetAmount$" />
+        <label for="horse">Horse 🐎</label>
+        <input id="horse" class="form-control mb-2" type="text" readonly value="@Bet.Horse.Name" />
+        <label for="coefficient">Coefficient 🎯</label>
+        <input id="coefficient" class="form-control mb-2" type="text" readonly value="1.3 / 26$" />
+        <label for="winner">Winner 🏆</label>
+        <input id="winner" class="form-control mb-2" type="text" readonly value="@Bet.Match.Winner" />
+    </div>
+    <div class="card-footer">
+        <button type="button" class="btn btn-warning" disabled>Collect Money</button>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public Bet Bet { get; set; }
+}

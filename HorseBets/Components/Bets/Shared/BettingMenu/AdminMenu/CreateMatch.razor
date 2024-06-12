@@ -1,0 +1,95 @@
+﻿@using HorseBets.Bets.Models
+@using HorseBets.Bets.Services
+@using HorseBets.Components.Shared
+
+@inject IHorseService HorseService
+@inject IMatchService MatchService
+
+@inherits CancellableComponent
+
+<fieldset class="border rounded-3 p-3 wrapper">
+    <legend class="float-none w-auto px-3">Create</legend>
+    <div class="card">
+        <div class="card-body">
+            <EditForm Model="Model" OnSubmit="CreateNewMatch" id="CreateMatch">
+                <label for="startDate">Start Date</label>
+                <input id="startDate" class="form-control mb-2" type="datetime-local" @bind="Model!.StartTime" min="@MinStartTime.ToString("yyyy-MM-ddTHH:mm")" />
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Power</th>
+                                <th scope="col">In</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (horses != null)
+                            {
+                                @for (int i = 0; i < horses.Count(); i++)
+                                {
+                                    int index = i + 1;
+                                    string horseId = horses[i].Id;
+                                    <tr>
+                                        <th scope="row">@index</th>
+                                        <td>@horses[i].Name</td>
+                                        <td>@horses[i].Speed</td>
+                                        <td>
+                                            <input class="form-check-input" @onchange="eventArgs => { CheckboxClicked(horseId, eventArgs.Value); }" type="checkbox" id="horseParticipation">
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <h4>Loading...</h4>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </EditForm>
+        </div>
+        <div class="card-footer">
+            @if (!IsEnoughParticipants)
+            {
+                <small id="amountWarning" class="form-text text-muted">You must select at least @MinimumNumberOfHorses participants.</small>
+            }
+            <button type="submit" form="CreateMatch" class="btn btn-primary @CreateButtonStatus">Create</button>
+        </div>
+    </div>
+</fieldset>
+
+@code {
+    [Parameter]
+    public int MinimumNumberOfHorses { get; set; } = 3;
+    [Parameter]
+    public EventCallback<Match> OnCreate { get; set; }
+    [SupplyParameterFromForm]
+    public Match? Model { get; set; } = new();
+
+    private List<Horse> horses = null!;
+
+    public DateTime MinStartTime { get => DateTime.Now.AddMinutes(5); }
+    private bool IsEnoughParticipants { get => Model!.Participants.Count >= MinimumNumberOfHorses; }
+    private string CreateButtonStatus { get => IsEnoughParticipants ? "" : "disabled"; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model!.StartTime = MinStartTime;
+        horses = await HorseService.GetAllHorsesAsync(CancellationToken);
+    }
+    private async Task CreateNewMatch()
+    {
+        Match createdMatch = await MatchService.CreateNewMatchAsync(Model, CancellationToken);
+        await OnCreate.InvokeAsync(createdMatch);
+    }
+    private void CheckboxClicked(string checkID, object checkedValue)
+    {
+        if ((bool)checkedValue)
+            Model!.Participants.Add(horses.First(x => x.Id == checkID));
+        else
+            Model!.Participants.Remove(horses.First(x => x.Id == checkID));
+        StateHasChanged();
+    }
+}

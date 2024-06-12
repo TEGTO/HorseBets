@@ -1,0 +1,38 @@
+﻿@using HorseBets.Bets
+@using HorseBets.Bets.Models
+@using HorseBets.Bets.Services
+@using HorseBets.Components.Account
+@using HorseBets.Components.Bets.Shared
+@using HorseBets.Data
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+
+@inject ILogger<TopRow> Logger
+@rendermode InteractiveServer
+
+@inherits GetClient
+
+<div class="top-row">
+    <AuthorizeView>
+        <Authorized>
+            <h4>💵: @(Client?.Balance)$</h4>
+        </Authorized>
+    </AuthorizeView>
+</div>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        SubscribeOnClientUpdate();
+        await TryGetClient();
+    }
+    private void SubscribeOnClientUpdate()
+    {
+        ClientService.UpdateClientAsync += async (c) =>
+       {
+           if (c != null && Client != null && c.Id == Client.Id)
+               await UpdateClient();
+       };
+    }
+}

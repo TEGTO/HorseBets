@@ -1,0 +1,41 @@
+﻿@using HorseBets.Bets.Services
+@using HorseBets.Data
+@using Microsoft.AspNetCore.Identity
+
+@inject IClientService clientService
+
+@inherits OwningComponentBase<UserManager<ApplicationUser>>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected Client Client { get; set; }
+    protected ApplicationUser Appuser { get; private set; }
+    protected bool Authenticated { get; private set; }
+    protected IClientService ClientService { get => clientService; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await TryGetClient();
+    }
+    protected async Task TryGetClient()
+    {
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+        Authenticated = user.Identity?.IsAuthenticated ?? false;
+        if (Authenticated)
+        {
+            Appuser = await Service.GetUserAsync(user);
+            await UpdateClient();
+        }
+    }
+    protected async Task UpdateClient()
+    {
+        if (Appuser != null)
+        {
+            Client = await ClientService.GetClientByUserAsync(Appuser);
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+}

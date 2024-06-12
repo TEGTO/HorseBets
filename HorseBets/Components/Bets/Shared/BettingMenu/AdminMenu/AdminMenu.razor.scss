@@ -1,0 +1,23 @@
+﻿@use '../../../bet-styles';
+
+.menu-content {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.menu-content > * {
+}
+
+.create-match {
+    flex-grow: 2;
+    flex-shrink: 1;
+    height: 515px;
+}
+
+.cancel-matches {
+    flex-grow: 4;
+    flex-shrink: 1;
+    height: 515px;
+}

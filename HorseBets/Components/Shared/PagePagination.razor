@@ -1,0 +1,37 @@
+﻿<nav aria-label="page navigation">
+    <ul class="pagination justify-content-center">
+        @for (int i = CurrentPageNumber - MaxShowPagesOnEachSide; i < CurrentPageNumber; i++)
+        {
+            if (i >= 1)
+            {
+                var index = i;
+                <li class="page-item @(i == CurrentPageNumber ? "active" : "")">
+                    <button class="page-link" @onclick="@(e => ChangePage(index))">@i</button>
+                </li>
+            }
+        }
+        @for (int i = CurrentPageNumber; i <= CurrentPageNumber + MaxShowPagesOnEachSide; i++)
+        {
+            if (i <= TotalPages)
+            {
+                var index = i;
+                <li class="page-item @(i == CurrentPageNumber ? "active" : "")">
+                    <button class="page-link" @onclick="@(e => ChangePage(index))">@i</button>
+                </li>
+            }
+        }
+    </ul>
+</nav>
+
+@code {
+    [Parameter]
+    public int TotalPages { get; set; }
+    [Parameter]
+    public int MaxShowPagesOnEachSide { get; set; }
+    [Parameter]
+    public int CurrentPageNumber { get; set; }
+    [Parameter]
+    public Action<int> OnChangePage { get; set; } = default!;
+
+    private void ChangePage(int index) => OnChangePage?.Invoke(index);
+}

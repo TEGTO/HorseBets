@@ -1,0 +1,8 @@
+﻿
+<label for="matchDate">Match Date 📅</label>
+<input id="matchDate" class="form-control mb-2" type="datetime-local" value="@Date.ToLocalTime().ToString("yyyy-MM-ddTHH:mm")" readonly />
+
+@code {
+    [Parameter]
+    public DateTime Date { get; set; }
+}

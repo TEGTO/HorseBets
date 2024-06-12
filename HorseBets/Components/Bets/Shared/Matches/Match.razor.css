@@ -1,0 +1,56 @@
+﻿fieldset {
+  border: 1px solid #d6d5d5 !important;
+}
+
+.betting-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  overflow-y: hidden;
+}
+
+.betting-menu-container {
+  min-height: 565px;
+  min-width: 400px;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C3C2C2;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #969595;
+}
+
+.card {
+  height: 100%;
+  width: 100%;
+}
+
+.body-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-wrapper {
+  max-height: 270px;
+  overflow-y: scroll;
+}
+
+.card-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.card-footer .alert-success {
+  padding: 5px;
+}

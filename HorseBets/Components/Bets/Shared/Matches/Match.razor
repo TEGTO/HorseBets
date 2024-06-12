@@ -1,0 +1,155 @@
+﻿@using HorseBets.Bets.Models
+@using HorseBets.Bets.Services
+@using HorseBets.Components.Shared
+@inject IBetService BetService
+
+@inherits CancellableComponent
+
+<div class="card text-center">
+    <div class="card-header">
+        <b>Match #@(MatchObject.Id)</b>
+    </div>
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <MatchDate Date="@Model.Match.StartTime" />
+            </li>
+            <li class="list-group-item participants-content">
+                <div class="table-wrapper" id="matches">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Participant 🐎</th>
+                                <th scope="col">Coefficient 🎯</th>
+                                <th scope="col">Choice</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <InputRadioGroup @bind-Value="SelectedHorse" Name="@MatchObject.Id.ToString()" @bind-Value:after="() => DisableSuccessMessage()">
+                                @for (int i = 0; i < MatchObject.Participants.Count; i++)
+                                {
+                                    int index = i + 1;
+                                    <tr>
+                                        <th scope="row">@index</th>
+                                        <td>@MatchObject.Participants[i].Name</td>
+                                        <td>1.0</td>
+                                        <td>
+                                            <InputRadio Value="@MatchObject.Participants[i].Id"
+                                                        class="better-radio" />
+                                        </td>
+                                    </tr>
+                                }
+                            </InputRadioGroup>
+                        </tbody>
+                    </table>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="card-footer">
+        <EditForm EditContext="@EditContext" OnSubmit="@SubmitFormAsync">
+            <FluentValidationValidator @ref="fluentValidationValidator" />
+            <ValidationSummary />
+            @if (BetSuccessfullyPlaced)
+            {
+                <div class="alert alert-success" role="alert">
+
+                    Bet successfully placed!
+                </div>
+            }
+            <div class="form-group">
+                <div class="input-group">
+                    <CurrencyInput TValue="decimal" @bind-Value="Model.BetAmount"
+                                   name="@MatchObject.Id"
+                                   @bind-Value:after="() => DisableSuccessMessage()"
+                                   Class="form-control"
+                                   Placeholder="Place your bet"
+                                   MaximumFractionDigits=2 />
+                    <Button Type="ButtonType.Submit" Color="ButtonColor.Success" Class="btn btn-warning" Disabled="IsSendBetDisabled">Make bet 💰</Button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public HorseBets.Bets.Models.Match MatchObject { get; set; } = null!;
+    [Parameter, EditorRequired]
+    public Client? Client
+    {
+        get => client;
+        set
+        {
+            client = value;
+            if (Model != null)
+                Model.Client = client;
+        }
+    }
+    [SupplyParameterFromForm]
+    public Bet Model { get; set; } = new Bet() { BetAmount = 0.05m };
+    public EditContext EditContext { get; set; }
+
+    private Client client;
+    private string selectedHorseId = "";
+    private FluentValidationValidator? fluentValidationValidator;
+
+    private bool BetSuccessfullyPlaced { get; set; }
+    private bool IsSendBetDisabled { get => Client == null || Client.Balance < Model.BetAmount; }
+    private string SelectedHorse
+    {
+        get => selectedHorseId;
+        set
+        {
+            selectedHorseId = value;
+            Model.Horse = MatchObject.Participants.FirstOrDefault(x => x.Id == selectedHorseId);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        ResetForm();
+    }
+    protected override void OnParametersSet()
+    {
+        ResetForm();
+    }
+    private async void SubmitFormAsync()
+    {
+        if (await fluentValidationValidator!.ValidateAsync())
+        {
+            await BetService.CreateBetAsync(Model, CancellationToken);
+            SetFormAfterSend();
+        }
+    }
+    private void ResetForm()
+    {
+        DisableSuccessMessage();
+        SetModelDefaultValues();
+        EditContext = new EditContext(Model);
+    }
+    private void SetFormAfterSend()
+    {
+        EnableSuccessMessage();
+        SetModelDefaultValues();
+    }
+    private void SetModelDefaultValues()
+    {
+        Model.BetAmount = 0.05m;
+        Model.Match = MatchObject;
+        Model.Client = Client;
+        SelectedHorse = MatchObject.Participants.FirstOrDefault()?.Id;
+        StateHasChanged();
+    }
+    private void EnableSuccessMessage()
+    {
+        BetSuccessfullyPlaced = true;
+        StateHasChanged();
+    }
+    private void DisableSuccessMessage()
+    {
+        BetSuccessfullyPlaced = false;
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,6 @@
+@HorseBetsServer_HostAddress = http://localhost:5004
+
+GET {{HorseBetsServer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

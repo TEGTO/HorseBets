@@ -1,0 +1,25 @@
+﻿@use '../bet-styles';
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.match-grid {
+    margin: 0 10px 10px 10px;
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 20px;
+    padding: 10px;
+    justify-content: center;
+    min-height: 50em;
+}
+
+.match-content {
+    height: 530px;
+}
+
+.paginator {
+    width: 100%;
+}

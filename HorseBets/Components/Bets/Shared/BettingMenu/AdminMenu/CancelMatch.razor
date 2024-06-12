@@ -1,0 +1,95 @@
+﻿@using HorseBets.Bets.Models
+@using HorseBets.Bets.Services
+@using HorseBets.Components.Shared
+
+@inject IMatchService MatchService
+@inject IJSRuntime JSRuntime
+@inject ILogger<CancelMatch> Logger
+
+@implements IAsyncDisposable
+@inherits CancellableComponent
+
+@if (Matches == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <fieldset class="border rounded-3 p-3 wrapper" id="matches-scrolling">
+        <legend class="float-none w-auto px-3">Active Matches</legend>
+        <div class="match-grid">
+            @foreach (var match in Matches)
+            {
+                <div class="match-content">
+                    <div class="card text-center">
+                        <b>Match #@match.Id</b>
+                        <input id="matchDate" class="form-control mb-2 text-center" type="datetime-local" readonly value="@match.StartTime.ToLocalTime().ToString("yyyy-MM-ddTHH:mm")" />
+                        <div class="card-footer submit-container">
+                            <button type="button" class="btn btn-danger" @onclick="() => ToCancelMatch(match)">Cancel Match</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </fieldset>
+}
+@code {
+    [Parameter]
+    public int ItemsOnPage { get; set; } = 12;
+    [Parameter]
+    public List<Match> Matches { get; set; } = null!;
+
+    private int page;
+    private IJSObjectReference? module;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await OnScrollDivEnd();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                module = await JSRuntime.InvokeAsync<IJSObjectReference>(
+                "import", "./scripts/divScrollEnd.js");
+                await module.InvokeVoidAsync("checkDivScrollEnd", cancellationToken: CancellationToken, "matches-scrolling", "OnScrollDivEnd",
+                DotNetObjectReference.Create(this));
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.Message);
+            }
+        }
+    }
+    [JSInvokable]
+    public async Task OnScrollDivEnd()
+    {
+        page++;
+        await AddNewItems(page);
+    }
+    private async Task AddNewItems(int page)
+    {
+        Matches.AddRange(await MatchService.GetMatchesOnPageAsync(page, ItemsOnPage, cancellationToken: CancellationToken));
+        StateHasChanged();
+    }
+    private async Task ToCancelMatch(Match match)
+    {
+        await MatchService.CancelMatchAsync(match, CancellationToken);
+        Matches.Remove(match);
+        StateHasChanged();
+    }
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (module != null)
+                await module.DisposeAsync();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex.Message);
+        }
+    }
+}

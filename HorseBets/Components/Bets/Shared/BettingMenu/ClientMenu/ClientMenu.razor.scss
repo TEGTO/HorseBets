@@ -1,0 +1,19 @@
+@use '../../../bet-styles';
+
+.container {
+    min-height: 565px;
+    min-width: 400px;
+    max-height: 50em;
+    margin-bottom: 50px;
+}
+
+.menu-content {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 15px;
+    min-height: 30em;
+    padding: 10px;
+    max-height: 40em;
+    overflow-y: scroll;
+}

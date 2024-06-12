@@ -1,0 +1,9 @@
+﻿$border-color: #d6d5d5;
+
+@mixin line-border {
+    background-color: #f7f7f7;
+    border: 1px solid $border-color;
+}
+fieldset {
+   border: 1px solid $border-color !important; 
+}
