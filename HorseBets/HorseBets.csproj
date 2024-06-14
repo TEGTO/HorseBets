@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
+    <Content Remove="Components\FlazorStoreInitializer.razor" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +23,8 @@
   <ItemGroup>
     <PackageReference Include="Blazor.Bootstrap" Version="2.2.1" />
     <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="Fluxor.Blazor.Web" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.2" />
@@ -32,6 +35,15 @@
 
   <ItemGroup>
     <None Include="compilerconfig.json" />
+    <None Include="Components\Shared\FlazorStoreInitializer.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\FlazorStoreInitializer.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Components\FlazorStoreInitializer.razor" />
   </ItemGroup>
 
 </Project>

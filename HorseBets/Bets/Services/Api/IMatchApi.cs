@@ -1,8 +1,8 @@
 ﻿using HorseBets.Bets.Models;
 
-namespace HorseBets.Bets.Services
+namespace HorseBets.Bets.Services.Api
 {
-    public interface IMatchService
+    public interface IMatchApi
     {
         public Task<Match?> GetMatchByIdAsync(int matchId, CancellationToken cancellationToken = default);
         public Task<IEnumerable<Match>> GetMatchesOnPageAsync(int page, int amountOnPage, bool onlyActive = true, CancellationToken cancellationToken = default);

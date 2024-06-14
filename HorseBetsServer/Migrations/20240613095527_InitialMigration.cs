@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace HorseBets.Migrations
+namespace HorseBetsServer.Migrations
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration
@@ -44,7 +44,8 @@ namespace HorseBets.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    StartTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    StartTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,9 +58,10 @@ namespace HorseBets.Migrations
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     BetAmount = table.Column<decimal>(type: "numeric", nullable: false),
-                    ClientId = table.Column<string>(type: "text", nullable: false),
+                    ClientId = table.Column<string>(type: "text", nullable: true),
                     MatchId = table.Column<int>(type: "integer", nullable: false),
-                    HorseId = table.Column<string>(type: "text", nullable: false)
+                    HorseId = table.Column<string>(type: "text", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,14 +70,12 @@ namespace HorseBets.Migrations
                         name: "FK_Bets_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Bets_Horses_HorseId",
                         column: x => x.HorseId,
                         principalTable: "Horses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Bets_Matches_MatchId",
                         column: x => x.MatchId,
@@ -90,7 +90,7 @@ namespace HorseBets.Migrations
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     Coefficient = table.Column<float>(type: "real", nullable: false),
-                    HorseId = table.Column<string>(type: "text", nullable: false),
+                    HorseId = table.Column<string>(type: "text", nullable: true),
                     MatchId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -100,8 +100,7 @@ namespace HorseBets.Migrations
                         name: "FK_HorseCoefficients_Horses_HorseId",
                         column: x => x.HorseId,
                         principalTable: "Horses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_HorseCoefficients_Matches_MatchId",
                         column: x => x.MatchId,

@@ -2,7 +2,7 @@
 {
     public class ChangeClientBalanceDto
     {
-        public string ClientId { get; set; } = null!;
+        public string ClientId { get; set; } = default!;
         public decimal Value { get; set; }
     }
 }

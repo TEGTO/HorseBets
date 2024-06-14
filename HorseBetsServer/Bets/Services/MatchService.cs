@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HorseBets.Bets.Services
 {
-    public class MatchService(IDbContextFactory<BetsDbContext> contextFactory) : ServiceDbBase(contextFactory)
+    public class MatchService(IDbContextFactory<BetsDbContext> contextFactory) : ServiceDbBase(contextFactory), IMatchService
     {
-        public async Task<Match> GetMatchById(int matchId, CancellationToken cancelentionToken)
+        public async Task<Match> GetMatchByIdAsync(int matchId, CancellationToken cancelentionToken)
         {
             using (var dbContext = await CreateDbContextAsync(cancelentionToken))
             {
@@ -49,19 +49,19 @@ namespace HorseBets.Bets.Services
             }
             return matchesOnPage;
         }
-        public async Task CreateMatch(Match match, CancellationToken cancelentionToken)
+        public async Task CreateMatchAsync(Match match, CancellationToken cancelentionToken)
         {
             using (var dbContext = await CreateDbContextAsync(cancelentionToken))
             {
-                match.StartTime = match.StartTime.ToUniversalTime();
-                match.IsActive = true;
+                Match newMatch = new Match();
+                newMatch.StartTime = match.StartTime.ToUniversalTime();
                 for (int i = 0; i < match.Participants.Count; i++)
-                    match.Participants[i] = await dbContext.Horses.FirstAsync(x => x.Id == match.Participants[i].Id);
-                await dbContext.AddAsync(match, cancelentionToken);
+                    newMatch.Participants.Add(await dbContext.Horses.FirstAsync(x => x.Id == match.Participants[i].Id));
+                await dbContext.AddAsync(newMatch, cancelentionToken);
                 await dbContext.SaveChangesAsync(cancelentionToken);
             }
         }
-        public async Task CancelMatch(int matchId, CancellationToken cancelentionToken)
+        public async Task CancelMatchAsync(int matchId, CancellationToken cancelentionToken)
         {
             using (var dbContext = await CreateDbContextAsync(cancelentionToken))
             {

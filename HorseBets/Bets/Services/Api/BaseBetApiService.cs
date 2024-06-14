@@ -1,11 +1,11 @@
-﻿namespace HorseBets.Bets.Services
+﻿namespace HorseBets.Bets.Services.Api
 {
-    public abstract class BaseBetsApi
+    public abstract class BaseBetApiService
     {
         protected readonly IHttpClientFactory httpClientFactory;
-        protected readonly ILogger<ClientService> logger;
+        protected readonly ILogger<BaseBetApiService> logger;
 
-        public BaseBetsApi(IHttpClientFactory httpClientFactory, ILogger<ClientService> logger)
+        public BaseBetApiService(IHttpClientFactory httpClientFactory, ILogger<BaseBetApiService> logger)
         {
             this.httpClientFactory = httpClientFactory;
             this.logger = logger;

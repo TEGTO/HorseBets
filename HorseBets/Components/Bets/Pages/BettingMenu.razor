@@ -1,4 +1,4 @@
-﻿@page "/bettingmenu"
+﻿@page "/Betting"
 @using HorseBets.Bets.Services
 @using HorseBets.Components.Account
 @using HorseBets.Components.Bets.Shared
@@ -8,13 +8,13 @@
 
 @rendermode InteractiveServer
 
-@inherits GetClient
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 @attribute [Authorize]
 
 <PageTitle>Betting Menu</PageTitle>
 
- @if (Client != null)
+ @if (ClientState != null)
 {
     <div class="betting-menu">
         <AuthorizeView Roles="@adminName">
@@ -23,11 +23,10 @@
         <AuthorizeView Roles="@bookmakerName">
         </AuthorizeView>
         <AuthorizeView Roles="@clientName">
-            <ClientMenu Client="@Client"></ClientMenu>
+            <ClientMenu Client="@ClientState.Value.Client"></ClientMenu>
         </AuthorizeView>
     </div>
 }
-
 
 @code
 {
@@ -35,4 +34,6 @@
     private string bookmakerName = Enum.GetName(Roles.Bookmaker)!;
     private string clientName = Enum.GetName(Roles.Client)!;
 
+    [Inject]
+    private IState<ClientState> ClientState { get; set; }
 }

@@ -1,0 +1,49 @@
+﻿@inherits OwningComponentBase<UserManager<ApplicationUser>>
+@implements IDisposable
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [Inject]
+    protected IState<ClientState> ClientState { get; set; }
+    [Inject]
+    private IClientService ClientService { get; set; }
+    private string AppUserId { get; set; } = default!;
+    private bool Authenticated { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUser();
+        ClientService.FetchClientStateByUserId(AppUserId);
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            ClientState.StateChanged += StateChanged;
+        }
+    }
+    public void StateChanged(object sender, EventArgs args)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+    protected async Task GetUser()
+    {
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+        Authenticated = user.Identity?.IsAuthenticated ?? false;
+        if (Authenticated)
+        {
+            var appuser = await Service.GetUserAsync(user);
+            AppUserId = appuser?.Id ?? "";
+        }
+    }
+    void IDisposable.Dispose()
+    {
+        if (ClientState != null)
+        {
+            ClientState.StateChanged -= StateChanged;
+        }
+    }
+}

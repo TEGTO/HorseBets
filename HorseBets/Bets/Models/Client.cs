@@ -2,7 +2,7 @@
 {
     public class Client
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         public decimal Balance { get; set; }
     }
 }

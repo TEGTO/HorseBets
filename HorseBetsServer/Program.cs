@@ -12,10 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSingleton<ClientService>();
-builder.Services.AddSingleton<MatchService>();
-builder.Services.AddSingleton<HorseService>();
-builder.Services.AddSingleton<BetService>();
+builder.Services.AddSingleton<IClientService, ClientService>();
+builder.Services.AddSingleton<IMatchService, MatchService>();
+builder.Services.AddSingleton<IHorseService, HorseService>();
+builder.Services.AddSingleton<IBetService, BetService>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not found.");
@@ -31,6 +31,7 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 ValidatorOptions.Global.LanguageManager.Enabled = false;
+
 builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
 {
     options.InvalidModelStateResponseFactory = context =>

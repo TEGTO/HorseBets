@@ -2,7 +2,7 @@
 {
     public class ClientDto
     {
-        public string Id { get; set; } = null!;
+        public string Id { get; set; } = default!;
         public decimal Balance { get; set; }
     }
 }

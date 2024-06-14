@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace HorseBets.Migrations
+namespace HorseBetsServer.Migrations
 {
     [DbContext(typeof(BetsDbContext))]
     partial class BetsDbContextModelSnapshot : ModelSnapshot
@@ -32,14 +32,12 @@ namespace HorseBets.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<string>("ClientId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("HorseId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("MatchId")
@@ -101,7 +99,6 @@ namespace HorseBets.Migrations
                         .HasColumnType("real");
 
                     b.Property<string>("HorseId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("MatchId")
@@ -177,15 +174,11 @@ namespace HorseBets.Migrations
                 {
                     b.HasOne("HorseBets.Bets.Models.Client", "Client")
                         .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ClientId");
 
                     b.HasOne("HorseBets.Bets.Models.Horse", "Horse")
                         .WithMany()
-                        .HasForeignKey("HorseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("HorseId");
 
                     b.HasOne("HorseBets.Bets.Models.Match", "Match")
                         .WithMany()
@@ -204,9 +197,7 @@ namespace HorseBets.Migrations
                 {
                     b.HasOne("HorseBets.Bets.Models.Horse", "Horse")
                         .WithMany()
-                        .HasForeignKey("HorseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("HorseId");
 
                     b.HasOne("HorseBets.Bets.Models.Match", "Match")
                         .WithMany()

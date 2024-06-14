@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HorseBets.Bets.Services
 {
-    public class HorseService(IDbContextFactory<BetsDbContext> contextFactory) : ServiceDbBase(contextFactory)
+    public class HorseService(IDbContextFactory<BetsDbContext> contextFactory) : ServiceDbBase(contextFactory), IHorseService
     {
         public async Task<IEnumerable<Horse>> GetHorsesAsync(CancellationToken cancelentionToken)
         {

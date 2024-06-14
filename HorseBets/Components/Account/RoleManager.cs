@@ -11,6 +11,7 @@ namespace HorseBets.Components.Account
         {
             this.userManager = userManager;
         }
+        public static string[] GetRoles() => Enum.GetNames(typeof(Roles));
         public async Task AddDefaultRoleToUserAsync(ApplicationUser user)
         {
             if (user != null)

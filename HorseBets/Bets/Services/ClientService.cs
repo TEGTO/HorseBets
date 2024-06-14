@@ -1,62 +1,30 @@
-﻿using HorseBets.Bets.Models;
-using HorseBets.Bets.Models.Dto;
-using HorseBets.Data;
+﻿using Fluxor;
+using HorseBets.Bets.Services.Api;
+using HorseBets.Bets.Store;
 
 namespace HorseBets.Bets.Services
 {
-    public class ClientService(IHttpClientFactory httpClientFactory, ILogger<ClientService> logger) : BaseBetsApi(httpClientFactory, logger), IClientService
+    public class ClientService : IClientService
     {
-        public Action<Client> UpdateClientAsync { get; set; }
+        private IDispatcher dispatcher;
+        private IClientApi clientApi;
 
-        public async Task<Client> GetClientByUserAsync(ApplicationUser user, CancellationToken cancellationToken = default)
+        public ClientService(IDispatcher dispatcher, IClientApi clientApi)
         {
-            try
-            {
-                using (var httpClient = CreateHttpClient())
-                {
-                    Client client = await httpClient.GetFromJsonAsync<Client>($"Client/{user.Id}", cancellationToken);
-                    client ??= new Client();
-                    return client;
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.Message);
-                return new Client();
-            }
+            this.dispatcher = dispatcher;
+            this.clientApi = clientApi;
         }
-        public async Task CreateClientForUserAsync(ApplicationUser user, CancellationToken cancellationToken = default)
+        public void FetchClientStateByUserId(string userId)
         {
-            try
-            {
-                using (var httpClient = CreateHttpClient())
-                {
-                    CreateClientDto clientDto = new CreateClientDto() { UserId = user.Id };
-                    var result = await httpClient.PostAsJsonAsync($"Client/create", clientDto, cancellationToken);
-                    result.EnsureSuccessStatusCode();
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.Message);
-            }
+            dispatcher.Dispatch(new FetchClientDataByUserIdAction(userId));
         }
-        public async Task AddValueToClientBalanceAsync(Client client, decimal value, CancellationToken cancellationToken = default)
+        public async Task CreateClientForUserIdAsync(string userId, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                using (var httpClient = CreateHttpClient())
-                {
-                    ChangeClientBalanceDto clientBalanceDto = new ChangeClientBalanceDto()
-                    { ClientId = client.Id, Value = value };
-                    var result = await httpClient.PatchAsJsonAsync($"Client/add", clientBalanceDto, cancellationToken);
-                    result.EnsureSuccessStatusCode();
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.Message);
-            }
+            await clientApi.CreateClientForUserIdAsync(userId, cancellationToken);
+        }
+        public void UpdateClientBalance(decimal newBalance)
+        {
+            dispatcher.Dispatch(new UpdateClientBalanceAction(newBalance));
         }
     }
 }

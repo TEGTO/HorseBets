@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HorseBets.Bets.Services
 {
-    public class ClientService(IDbContextFactory<BetsDbContext> contextFactory) : ServiceDbBase(contextFactory)
+    public class ClientService(IDbContextFactory<BetsDbContext> contextFactory) : ServiceDbBase(contextFactory), IClientService
     {
         public async Task<Client?> GetClientByUserIdAsync(string userId, CancellationToken cancelentionToken)
         {
@@ -15,24 +15,24 @@ namespace HorseBets.Bets.Services
                     .FirstOrDefaultAsync(x => x.UserId == userId, cancelentionToken);
             }
         }
-        public async Task AddValueToClientBalance(string clientId, decimal value, CancellationToken cancelentionToken)
+        public async Task AddValueToClientBalanceAsync(string clientId, decimal value, CancellationToken cancelentionToken)
         {
             if (value >= 0)
-                await AddToClientBalance(clientId, value, cancelentionToken);
+                await AddToClientBalanceAsync(clientId, value, cancelentionToken);
             else
                 throw new InvalidDataException("Value must be greater or equal to 0!");
         }
-        public async Task ReduceValueFromClientBalance(string clientId, decimal value, CancellationToken cancelentionToken)
+        public async Task ReduceValueFromClientBalanceAsync(string clientId, decimal value, CancellationToken cancelentionToken)
         {
             if (value >= 0)
             {
                 value *= -1;
-                await AddToClientBalance(clientId, value, cancelentionToken);
+                await AddToClientBalanceAsync(clientId, value, cancelentionToken);
             }
             else
                 throw new InvalidDataException("Value must be greater or equal to 0!");
         }
-        private async Task AddToClientBalance(string clientId, decimal value, CancellationToken cancelentionToken)
+        private async Task AddToClientBalanceAsync(string clientId, decimal value, CancellationToken cancelentionToken)
         {
             using (var dbContext = await CreateDbContextAsync(cancelentionToken))
             {
@@ -41,13 +41,12 @@ namespace HorseBets.Bets.Services
                 await dbContext.SaveChangesAsync(cancelentionToken);
             }
         }
-        public async Task CreateClientForUserAsync(string userId, CancellationToken cancelentionToken)
+        public async Task CreateClientForUserIdAsync(string userId, CancellationToken cancelentionToken)
         {
             Client newClient = new Client();
             using (var dbContext = await CreateDbContextAsync(cancelentionToken))
             {
-                var user = dbContext.Users.First(x => x.Id == userId);
-                newClient.UserId = user.Id;
+                newClient.UserId = userId;
                 await dbContext.AddAsync(newClient, cancelentionToken);
                 await dbContext.SaveChangesAsync(cancelentionToken);
             }

@@ -10,14 +10,12 @@ namespace HorseBets.Controllers
     [Route("[controller]")]
     public class HorseController : ControllerBase
     {
-        private readonly HorseService horseService;
-        private readonly ILogger<HorseController> logger;
+        private readonly IHorseService horseService;
         private readonly IMapper mapper;
 
-        public HorseController(HorseService horseService, ILogger<HorseController> logger, IMapper mapper)
+        public HorseController(IHorseService horseService, IMapper mapper)
         {
             this.horseService = horseService;
-            this.logger = logger;
             this.mapper = mapper;
         }
         [HttpGet]

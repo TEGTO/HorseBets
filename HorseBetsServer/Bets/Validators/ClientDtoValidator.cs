@@ -7,7 +7,6 @@ namespace HorseBetsServer.Bets.Validators
     {
         public ClientDtoValidator()
         {
-            RuleFor(x => x.Id).NotNull();
             RuleFor(x => x.Balance).GreaterThanOrEqualTo(0);
         }
     }

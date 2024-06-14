@@ -1,7 +1,4 @@
-﻿@using HorseBets.Bets.Models
-@using HorseBets.Bets.Services
-@using HorseBets.Components.Shared
-@inject IBetService BetService
+﻿@inject IBetService BetService
 
 @inherits CancellableComponent
 
@@ -77,21 +74,12 @@
     [Parameter, EditorRequired]
     public HorseBets.Bets.Models.Match MatchObject { get; set; } = null!;
     [Parameter, EditorRequired]
-    public Client? Client
-    {
-        get => client;
-        set
-        {
-            client = value;
-            if (Model != null)
-                Model.Client = client;
-        }
-    }
+    public Client Client { get; set; } = null!;
+
     [SupplyParameterFromForm]
     public Bet Model { get; set; } = new Bet() { BetAmount = 0.05m };
     public EditContext EditContext { get; set; }
 
-    private Client client;
     private string selectedHorseId = "";
     private FluentValidationValidator? fluentValidationValidator;
 
@@ -103,7 +91,7 @@
         set
         {
             selectedHorseId = value;
-            Model.Horse = MatchObject.Participants.FirstOrDefault(x => x.Id == selectedHorseId);
+            Model.Horse = MatchObject.Participants.FirstOrDefault(x => x.Id == selectedHorseId)!;
         }
     }
 
@@ -139,7 +127,7 @@
         Model.BetAmount = 0.05m;
         Model.Match = MatchObject;
         Model.Client = Client;
-        SelectedHorse = MatchObject.Participants.FirstOrDefault()?.Id;
+        SelectedHorse = MatchObject.Participants?.FirstOrDefault()?.Id ?? "";
         StateHasChanged();
     }
     private void EnableSuccessMessage()

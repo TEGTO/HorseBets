@@ -7,7 +7,7 @@ namespace HorseBetsServer.Bets.Validators
     {
         public HorseDtoValidator()
         {
-            RuleFor(x => x.Id).NotNull();
+            RuleFor(x => x.Speed).GreaterThanOrEqualTo(0);
         }
     }
 }

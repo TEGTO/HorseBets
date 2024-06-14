@@ -1,8 +1,9 @@
 using FluentValidation;
-using HorseBets.Components;
-using HorseBets.Bets.Models;
+using FluentValidation.AspNetCore;
+using Fluxor;
 using HorseBets.Bets.Services;
-using HorseBets.Bets.Validators;
+using HorseBets.Bets.Services.Api;
+using HorseBets.Components;
 using HorseBets.Components.Account;
 using HorseBets.Data;
 using HorseBets.Middleware;
@@ -22,14 +23,20 @@ builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 builder.Services.AddHttpClient("bets", (httpClient) =>
 {
-    httpClient.BaseAddress = new Uri(builder.Configuration.GetConnectionString("BetsAPI"));
+    httpClient.BaseAddress = new Uri(builder.Configuration.GetConnectionString("BetsAPI")!);
 });
 builder.Services.AddScoped<RoleManager>();
-builder.Services.AddSingleton<IClientService, ClientService>();
-builder.Services.AddSingleton<IMatchService, MatchService>();
-builder.Services.AddSingleton<IHorseService, HorseService>();
-builder.Services.AddSingleton<IBetService, BetService>();
-builder.Services.AddScoped<AbstractValidator<Bet>, BetValidator>();
+builder.Services.AddScoped<IClientApi, ClientApi>();
+builder.Services.AddScoped<IMatchApi, MatchApi>();
+builder.Services.AddScoped<IHorseApi, HorseApi>();
+builder.Services.AddScoped<IBetApi, BetApi>();
+builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IBetService, BetService>();
+
+builder.Services.AddFluentValidationAutoValidation()
+    .AddFluentValidationClientsideAdapters()
+    .AddValidatorsFromAssemblyContaining<Program>();
+
 builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddAuthentication(options =>
@@ -58,6 +65,10 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, BlazorAuthorizationMiddlewareResultHandler>();
 builder.Services.AddHttpContextAccessor();
 
+var currentAssembly = typeof(Program).Assembly;
+builder.Services.AddFluxor(options =>
+    options.ScanAssemblies(currentAssembly));
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -67,7 +78,6 @@ else
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
 }
-
 
 app.UseHttpsRedirection();
 

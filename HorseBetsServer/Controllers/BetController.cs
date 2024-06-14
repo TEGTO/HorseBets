@@ -10,21 +10,19 @@ namespace HorseBets.Controllers
     [Route("[controller]")]
     public class BetController : ControllerBase
     {
-        private readonly BetService betManager;
-        private readonly ILogger<ClientController> logger;
+        private readonly IBetService betManager;
         private readonly IMapper mapper;
 
-        public BetController(BetService betManager, ILogger<ClientController> logger, IMapper mapper)
+        public BetController(IBetService betManager, IMapper mapper)
         {
             this.betManager = betManager;
-            this.logger = logger;
             this.mapper = mapper;
         }
         [HttpGet]
         [Route("{betId}")]
         public async Task<ActionResult<BetDto>> GetBetById([FromRoute] string betId, CancellationToken cancelentionToken)
         {
-            Bet bet = await betManager.GetBetById(betId, cancelentionToken);
+            Bet? bet = await betManager.GetBetByIdAsync(betId, cancelentionToken);
             if (bet == null)
                 return NotFound();
             return Ok(mapper.Map<BetDto>(bet));
@@ -34,7 +32,7 @@ namespace HorseBets.Controllers
         public async Task<ActionResult<IEnumerable<BetDto>>> GetBetsByClientIdOnPage([FromQuery] string clientId,
             [FromQuery] int page, [FromQuery] int amount, CancellationToken cancelentionToken)
         {
-            IEnumerable<Bet> matches = await betManager.GetBetsByClientIdOnPage(clientId, page, amount, cancelentionToken);
+            IEnumerable<Bet> matches = await betManager.GetBetsByClientIdOnPageAsync(clientId, page, amount, cancelentionToken);
             if (matches == null)
                 return NotFound();
             return Ok(matches.Select(mapper.Map<BetDto>));
@@ -44,7 +42,7 @@ namespace HorseBets.Controllers
         public async Task<ActionResult<BetDto>> CreateBet([FromBody] BetDto betDto, CancellationToken cancelentionToken)
         {
             Bet bet = mapper.Map<Bet>(betDto);
-            await betManager.CreateBet(bet, cancelentionToken);
+            await betManager.CreateBetAsync(bet, cancelentionToken);
             return await GetBetById(bet.Id, cancelentionToken);
         }
     }

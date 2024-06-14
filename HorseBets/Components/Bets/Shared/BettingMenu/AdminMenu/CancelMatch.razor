@@ -1,8 +1,6 @@
-﻿@using HorseBets.Bets.Models
-@using HorseBets.Bets.Services
-@using HorseBets.Components.Shared
+﻿@using Match = HorseBets.Bets.Models.Match;
 
-@inject IMatchService MatchService
+@inject IMatchApi MatchService
 @inject IJSRuntime JSRuntime
 @inject ILogger<CancelMatch> Logger
 

@@ -7,9 +7,9 @@ namespace HorseBets.Bets.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; } = null!;
+        public string Id { get; set; } = default!;
         public float Coefficient { get; set; } = 1f;
-        public Horse Horse { get; set; } = null!;
-        public Match Match { get; set; } = null!;
+        public Horse Horse { get; set; } = default!;
+        public Match Match { get; set; } = default!;
     }
 }

@@ -1,16 +1,9 @@
-﻿@page "/matches"
-@using HorseBets.Bets.Models
-@using HorseBets.Bets.Services
-@using HorseBets.Components.Bets.Shared
-@using HorseBets.Components.Bets.Shared.Matches
-@using HorseBets.Components.Shared
-@using HorseBets.Data
-@using Microsoft.AspNetCore.Identity
+﻿@page "/Matches"
+@inject IMatchApi MatchService
 
-@inject IMatchService MatchService
 @rendermode InteractiveServer
 
-@inherits GetClient
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 <PageTitle>Matches</PageTitle>
 @if (matchesOnPage == null)
@@ -24,7 +17,7 @@ else
             @foreach (var match in matchesOnPage)
             {
                 <div class="match-content">
-                    <Match MatchObject="@match" Client="@Client"></Match>
+                    <Match MatchObject="@match" Client="@ClientState.Value.Client"></Match>
                 </div>
             }
         </div>
@@ -40,11 +33,14 @@ else
     private int totalPages = 200;
     private int maxShowPages = 5;
     private IEnumerable<HorseBets.Bets.Models.Match> matchesOnPage = null!;
+    private event Action<int> OnChangePage = default!;
 
-    protected event Action<int> OnChangePage = default!;
+    [Inject]
+    private IState<ClientState> ClientState { get; set; }
 
     protected override void OnInitialized()
     {
+        base.OnInitialized();
         OnChangePage += ChangePage;
     }
     protected override async Task OnInitializedAsync()

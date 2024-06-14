@@ -8,7 +8,7 @@ namespace HorseBets.Bets.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; } = null!;
+        public string Id { get; set; } = default!;
         public float Speed { get; set; }
         public string? Name { get; set; }
         [JsonIgnore]

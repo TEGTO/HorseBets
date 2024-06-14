@@ -7,8 +7,8 @@ namespace HorseBets.Bets.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; } = null!;
+        public string Id { get; set; } = default!;
         public decimal Balance { get; set; }
-        public string UserId { get; set; } = null!;
+        public string UserId { get; set; } = default!;
     }
 }

@@ -2,6 +2,6 @@
 {
     public class CreateClientDto
     {
-        public string UserId { get; set; } = null!;
+        public string UserId { get; set; } = default!;
     }
 }

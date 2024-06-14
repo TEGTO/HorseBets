@@ -4,6 +4,6 @@ namespace HorseBets.Bets.Services
 {
     public interface IHorseService
     {
-        public Task<List<Horse>> GetAllHorsesAsync(CancellationToken cancellationToken = default);
+        public Task<IEnumerable<Horse>> GetHorsesAsync(CancellationToken cancelentionToken);
     }
 }

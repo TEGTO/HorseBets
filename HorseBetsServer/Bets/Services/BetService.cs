@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HorseBets.Bets.Services
 {
-    public class BetService(IDbContextFactory<BetsDbContext> contextFactory, ClientService clientService) : ServiceDbBase(contextFactory)
+    public class BetService(IDbContextFactory<BetsDbContext> contextFactory, IClientService clientService) : ServiceDbBase(contextFactory), IBetService
     {
-        public async Task<Bet?> GetBetById(string betId, CancellationToken cancelentionToken)
+        public async Task<Bet?> GetBetByIdAsync(string betId, CancellationToken cancelentionToken)
         {
             using (var dbContext = await CreateDbContextAsync(cancelentionToken))
             {
@@ -18,7 +18,7 @@ namespace HorseBets.Bets.Services
                     .FirstOrDefaultAsync(x => x.Id == betId, cancelentionToken);
             }
         }
-        public async Task<IEnumerable<Bet>> GetBetsByClientIdOnPage(string clientId, int page, int amountOnPage, CancellationToken cancelentionToken)
+        public async Task<IEnumerable<Bet>> GetBetsByClientIdOnPageAsync(string clientId, int page, int amountOnPage, CancellationToken cancelentionToken)
         {
             using (var dbContext = await CreateDbContextAsync(cancelentionToken))
             {
@@ -34,17 +34,18 @@ namespace HorseBets.Bets.Services
                     .ToArrayAsync(cancelentionToken);
             }
         }
-        public async Task CreateBet(Bet bet, CancellationToken cancelentionToken)
+        public async Task CreateBetAsync(Bet bet, CancellationToken cancelentionToken)
         {
             using (var dbContext = await CreateDbContextAsync(cancelentionToken))
             {
-                bet.CreationTime = DateTime.UtcNow;
-                bet.Client = await dbContext.Clients.FirstAsync(x => x.Id == bet.Client.Id);
-                bet.Match = await dbContext.Matches.FirstAsync(x => x.Id == bet.Match.Id);
-                bet.Horse = await dbContext.Horses.FirstAsync(x => x.Id == bet.Horse.Id);
-                await dbContext.Bets.AddAsync(bet);
+                Bet newBet = new Bet();
+                newBet.CreationTime = DateTime.UtcNow;
+                newBet.Client = await dbContext.Clients.FirstAsync(x => x.Id == bet.Client.Id);
+                newBet.Match = await dbContext.Matches.FirstAsync(x => x.Id == bet.Match.Id);
+                newBet.Horse = await dbContext.Horses.FirstAsync(x => x.Id == bet.Horse.Id);
+                await dbContext.Bets.AddAsync(newBet);
                 await dbContext.SaveChangesAsync(cancelentionToken);
-                await clientService.ReduceValueFromClientBalance(bet.Client.Id, bet.BetAmount, cancelentionToken);
+                await clientService.ReduceValueFromClientBalanceAsync(newBet.Client.Id, newBet.BetAmount, cancelentionToken);
             }
         }
     }

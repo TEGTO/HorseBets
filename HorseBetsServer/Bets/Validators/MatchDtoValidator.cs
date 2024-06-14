@@ -7,7 +7,6 @@ namespace HorseBetsServer.Bets.Validators
     {
         public MatchDtoValidator()
         {
-            RuleFor(x => x.Id).NotNull();
             RuleFor(x => x.Participants).NotNull();
             RuleFor(x => x.Participants).NotEmpty();
             RuleFor(x => x.StartTime.ToUniversalTime()).GreaterThanOrEqualTo(DateTime.UtcNow);

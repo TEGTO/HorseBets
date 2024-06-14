@@ -1,9 +1,7 @@
-﻿@using HorseBets.Bets.Models
-@using HorseBets.Bets.Services
-@using HorseBets.Components.Shared
+﻿@using Match = HorseBets.Bets.Models.Match;
 
-@inject IHorseService HorseService
-@inject IMatchService MatchService
+@inject IHorseApi HorseService
+@inject IMatchApi MatchService
 
 @inherits CancellableComponent
 
@@ -51,11 +49,11 @@
             </EditForm>
         </div>
         <div class="card-footer">
-            @if (!IsEnoughParticipants)
+            @if (!string.IsNullOrEmpty(ValidationError))
             {
-                <small id="amountWarning" class="form-text text-muted">You must select at least @MinimumNumberOfHorses participants.</small>
+                <small id="amountWarning" class="form-text text-muted">@ValidationError</small>
             }
-            <button type="submit" form="CreateMatch" class="btn btn-primary @CreateButtonStatus">Create</button>
+            <button type="submit" form="CreateMatch" class="btn btn-primary @IsCreateButtonDisabled">Create</button>
         </div>
     </div>
 </fieldset>
@@ -70,14 +68,26 @@
 
     private List<Horse> horses = null!;
 
-    public DateTime MinStartTime { get => DateTime.Now.AddMinutes(5); }
+    public DateTime MinStartTime { get => DateTime.Now.AddMinutes(4); }
     private bool IsEnoughParticipants { get => Model!.Participants.Count >= MinimumNumberOfHorses; }
-    private string CreateButtonStatus { get => IsEnoughParticipants ? "" : "disabled"; }
+    private string ValidationError 
+    { 
+        get
+        {
+            string error = string.Empty;
+            if (Model?.StartTime < MinStartTime)
+                error = "Time must be in 5 minutes from now.";
+            else if (!IsEnoughParticipants)
+                error = $"You must select at least {MinimumNumberOfHorses} participants.";
+            return error;
+        } 
+    }
+    private string IsCreateButtonDisabled { get => IsEnoughParticipants && Model?.StartTime >= MinStartTime ? "" : "disabled"; }
 
     protected override async Task OnInitializedAsync()
     {
-        Model!.StartTime = MinStartTime;
-        horses = await HorseService.GetAllHorsesAsync(CancellationToken);
+        SetDefaultTime();
+        await GetAllHorser();
     }
     private async Task CreateNewMatch()
     {
@@ -91,5 +101,13 @@
         else
             Model!.Participants.Remove(horses.First(x => x.Id == checkID));
         StateHasChanged();
+    }
+    private void SetDefaultTime()
+    {
+        Model!.StartTime = MinStartTime.AddMinutes(1);
+    }
+    private async Task GetAllHorser()
+    {
+        horses = await HorseService.GetAllHorsesAsync(CancellationToken);
     }
 }

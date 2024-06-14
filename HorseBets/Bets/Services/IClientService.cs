@@ -1,12 +1,9 @@
-﻿using HorseBets.Bets.Models;
-using HorseBets.Data;
-
-namespace HorseBets.Bets.Services
+﻿namespace HorseBets.Bets.Services
 {
     public interface IClientService
     {
-        public Task<Client> GetClientByUserAsync(ApplicationUser user, CancellationToken cancellationToken = default);
-        public Task CreateClientForUserAsync(ApplicationUser user, CancellationToken cancellationToken = default);
-        public Action<Client> UpdateClientAsync { get; set; }
+        public void FetchClientStateByUserId(string userId);
+        public Task CreateClientForUserIdAsync(string userId, CancellationToken cancellationToken = default);
+        public void UpdateClientBalance(decimal newBalance);
     }
 }

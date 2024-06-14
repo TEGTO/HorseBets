@@ -1,16 +1,23 @@
-﻿using HorseBets.Bets.Models;
+﻿using FluentValidation;
+using HorseBets.Bets.Models;
 
-namespace HorseBets.Bets.Services
+namespace HorseBets.Bets.Services.Api
 {
-    public class MatchService(IHttpClientFactory httpClientFactory, ILogger<ClientService> logger) : BaseBetsApi(httpClientFactory, logger), IMatchService
+    public class MatchApi : BaseBetApiService, IMatchApi
     {
+        private readonly IValidator<Match> validator;
+
+        public MatchApi(IHttpClientFactory httpClientFactory, ILogger<MatchApi> logger, IValidator<Match> validator) : base(httpClientFactory, logger)
+        {
+            this.validator = validator;
+        }
         public async Task<Match?> GetMatchByIdAsync(int matchId, CancellationToken cancellationToken = default)
         {
             try
             {
                 using (var httpClient = CreateHttpClient())
                 {
-                    Match match = await httpClient.GetFromJsonAsync<Match>($"Match/{matchId}", cancellationToken);
+                    Match? match = await httpClient.GetFromJsonAsync<Match>($"Match/{matchId}", cancellationToken);
                     return match;
                 }
             }
@@ -45,7 +52,7 @@ namespace HorseBets.Bets.Services
             {
                 using (var httpClient = CreateHttpClient())
                 {
-                    IEnumerable<Match> matches = await httpClient.GetFromJsonAsync<List<Match>>
+                    IEnumerable<Match>? matches = await httpClient.GetFromJsonAsync<List<Match>>
                         ($"Match/matchesOnPage?page={page}&amountOnPage={amountOnPage}&onlyActive={onlyActive}",
                         cancellationToken);
                     matches ??= new List<Match>();
@@ -64,12 +71,10 @@ namespace HorseBets.Bets.Services
             {
                 using (var httpClient = CreateHttpClient())
                 {
-                    if (match == null || match.Participants == null)
-                        throw new InvalidDataException("Invalid match data!");
+                    await validator.ValidateAsync(match);
                     HttpResponseMessage response = await httpClient.PostAsJsonAsync("Match/create", match,
                        cancellationToken);
-                    response.EnsureSuccessStatusCode();
-                    Match createdMatch = await response.Content.ReadFromJsonAsync<Match>(cancellationToken);
+                    Match? createdMatch = await response.Content.ReadFromJsonAsync<Match>(cancellationToken);
                     createdMatch ??= new Match();
                     return createdMatch;
                 }
@@ -86,8 +91,6 @@ namespace HorseBets.Bets.Services
             {
                 using (var httpClient = CreateHttpClient())
                 {
-                    if (match == null)
-                        throw new InvalidDataException("Invalid match data!");
                     await httpClient.DeleteAsync($"Match/cancel/{match.Id}", cancellationToken);
                 }
             }
