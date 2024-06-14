@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -18,9 +20,9 @@ builder.Services.AddSingleton<IHorseService, HorseService>();
 builder.Services.AddSingleton<IBetService, BetService>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not found.");
-builder.Services.AddDbContextFactory<BetsDbContext>(options =>
-    options.UseNpgsql(connectionString));
+var connectionString = "betsdb";
+builder.AddNpgsqlDbContext<BetsDbContext>(connectionString);
+builder.Services.AddDbContextFactory<BetsDbContext>();
 
 builder.Services.AddHttpsRedirection(options =>
 {
@@ -46,6 +48,18 @@ builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
 
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<BetsDbContext>();
+        dbContext.Database.Migrate();
+    }
+    app.CreateDbIfNotExists();
+}
+
+app.MapDefaultEndpoints();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

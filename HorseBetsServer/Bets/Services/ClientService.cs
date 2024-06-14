@@ -41,14 +41,15 @@ namespace HorseBets.Bets.Services
                 await dbContext.SaveChangesAsync(cancelentionToken);
             }
         }
-        public async Task CreateClientForUserIdAsync(string userId, CancellationToken cancelentionToken)
+        public async Task<Client> CreateClientForUserIdAsync(string userId, CancellationToken cancelentionToken)
         {
-            Client newClient = new Client();
             using (var dbContext = await CreateDbContextAsync(cancelentionToken))
             {
+                Client newClient = new Client();
                 newClient.UserId = userId;
                 await dbContext.AddAsync(newClient, cancelentionToken);
                 await dbContext.SaveChangesAsync(cancelentionToken);
+                return newClient;
             }
         }
     }

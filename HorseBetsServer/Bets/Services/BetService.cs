@@ -34,7 +34,7 @@ namespace HorseBets.Bets.Services
                     .ToArrayAsync(cancelentionToken);
             }
         }
-        public async Task CreateBetAsync(Bet bet, CancellationToken cancelentionToken)
+        public async Task<Bet> CreateBetAsync(Bet bet, CancellationToken cancelentionToken)
         {
             using (var dbContext = await CreateDbContextAsync(cancelentionToken))
             {
@@ -46,6 +46,7 @@ namespace HorseBets.Bets.Services
                 await dbContext.Bets.AddAsync(newBet);
                 await dbContext.SaveChangesAsync(cancelentionToken);
                 await clientService.ReduceValueFromClientBalanceAsync(newBet.Client.Id, newBet.BetAmount, cancelentionToken);
+                return newBet;
             }
         }
     }

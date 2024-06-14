@@ -7,19 +7,33 @@ namespace HorseBets.Data
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
-        protected override void OnModelCreating(ModelBuilder builder)
+
+    }
+    public static class Extensions
+    {
+        public static void CreateDbIfNotExists(this IHost host)
         {
-            foreach (var role in RoleManager.GetRoles())
+            using var scope = host.Services.CreateScope();
+
+            var services = scope.ServiceProvider;
+            var context = services.GetRequiredService<ApplicationDbContext>();
+            try
             {
-                builder.Entity<IdentityRole>().HasData(new IdentityRole
+                context.Database.EnsureCreated();
+                foreach (var role in RoleManager.GetRoles())
                 {
-                    Name = role,
-                    NormalizedName = role.ToUpper(),
-                    Id = Guid.NewGuid().ToString(),
-                    ConcurrencyStamp = Guid.NewGuid().ToString()
-                });
+                    context.Roles.Add(new IdentityRole
+                    {
+                        Name = role,
+                        NormalizedName = role.ToUpper(),
+                        Id = Guid.NewGuid().ToString(),
+                        ConcurrencyStamp = Guid.NewGuid().ToString()
+                    });
+                }
             }
-            base.OnModelCreating(builder);
+            catch (Exception ex)
+            {
+            }
         }
     }
 }

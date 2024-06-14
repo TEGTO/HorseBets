@@ -6,14 +6,14 @@ namespace HorseBets.Bets.Services
 {
     public class MatchService(IDbContextFactory<BetsDbContext> contextFactory) : ServiceDbBase(contextFactory), IMatchService
     {
-        public async Task<Match> GetMatchByIdAsync(int matchId, CancellationToken cancelentionToken)
+        public async Task<Match?> GetMatchByIdAsync(int matchId, CancellationToken cancelentionToken)
         {
             using (var dbContext = await CreateDbContextAsync(cancelentionToken))
             {
                 return await dbContext.Matches
                     .Include(x => x.Participants)
                     .AsNoTracking()
-                    .FirstAsync(x => x.Id == matchId, cancelentionToken);
+                    .FirstOrDefaultAsync(x => x.Id == matchId, cancelentionToken);
             }
         }
         public async Task<int> GetPagesAmountAsync(int amountItemsOnPage, CancellationToken cancelentionToken, bool onlyActive = true)
@@ -49,7 +49,7 @@ namespace HorseBets.Bets.Services
             }
             return matchesOnPage;
         }
-        public async Task CreateMatchAsync(Match match, CancellationToken cancelentionToken)
+        public async Task<Match> CreateMatchAsync(Match match, CancellationToken cancelentionToken)
         {
             using (var dbContext = await CreateDbContextAsync(cancelentionToken))
             {
@@ -59,6 +59,7 @@ namespace HorseBets.Bets.Services
                     newMatch.Participants.Add(await dbContext.Horses.FirstAsync(x => x.Id == match.Participants[i].Id));
                 await dbContext.AddAsync(newMatch, cancelentionToken);
                 await dbContext.SaveChangesAsync(cancelentionToken);
+                return newMatch;
             }
         }
         public async Task CancelMatchAsync(int matchId, CancellationToken cancelentionToken)

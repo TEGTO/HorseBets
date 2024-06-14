@@ -1,4 +1,5 @@
-﻿using HorseBets.Bets.Models;
+﻿using HorseBets.Api.Data;
+using HorseBets.Bets.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace HorseBets.Data
@@ -13,6 +14,28 @@ namespace HorseBets.Data
 
         public BetsDbContext(DbContextOptions<BetsDbContext> options) : base(options)
         {
+        }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
+    }
+    public static class Extensions
+    {
+        public static void CreateDbIfNotExists(this IHost host)
+        {
+            using var scope = host.Services.CreateScope();
+
+            var services = scope.ServiceProvider;
+            var context = services.GetRequiredService<BetsDbContext>();
+            try
+            {
+                context.Database.EnsureCreated();
+                DevelopSeedData.SeedData(context);
+            }
+            catch (Exception ex)
+            {
+            }
         }
     }
 }

@@ -7,8 +7,8 @@ namespace HorseBets.Bets.Validators
     {
         public MatchValidator()
         {
-
         }
+
         public void Validate()
         {
             RuleFor(x => x.Participants).NotNull().NotEmpty();

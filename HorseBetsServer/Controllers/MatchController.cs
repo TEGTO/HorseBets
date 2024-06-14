@@ -49,8 +49,8 @@ namespace HorseBets.Controllers
             if (matchDto == null)
                 return BadRequest();
             Match match = mapper.Map<Match>(matchDto);
-            await matchService.CreateMatchAsync(match, cancelentionToken);
-            return await GetMatchById(match.Id, cancelentionToken);
+            var newMatch = await matchService.CreateMatchAsync(match, cancelentionToken);
+            return Ok(mapper.Map<MatchDto>(newMatch));
         }
         [HttpDelete]
         [Route("cancel/{matchId}")]

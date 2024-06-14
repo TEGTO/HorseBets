@@ -5,7 +5,11 @@ VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HorseBets", "HorseBets\HorseBets.csproj", "{C04B24A6-AFB6-406C-82D3-E31367F74B27}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HorseBetsServer", "HorseBetsServer\HorseBetsServer.csproj", "{33EB2D36-992A-4D63-855D-FFD694FC617D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HorseBets.Api", "HorseBetsServer\HorseBets.Api.csproj", "{33EB2D36-992A-4D63-855D-FFD694FC617D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HorseBets.Aspire.AppHost", "HorseBets.Aspire\HorseBets.Aspire.AppHost\HorseBets.Aspire.AppHost.csproj", "{3051ACBA-6CBF-4FA3-8452-23A2D345CD95}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HorseBets.Aspire.ServiceDefaults", "HorseBets.Aspire\HorseBets.Aspire.ServiceDefaults\HorseBets.Aspire.ServiceDefaults.csproj", "{B13CBD19-5393-43A5-BD4D-D196D5E5AD39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{33EB2D36-992A-4D63-855D-FFD694FC617D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33EB2D36-992A-4D63-855D-FFD694FC617D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33EB2D36-992A-4D63-855D-FFD694FC617D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3051ACBA-6CBF-4FA3-8452-23A2D345CD95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3051ACBA-6CBF-4FA3-8452-23A2D345CD95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3051ACBA-6CBF-4FA3-8452-23A2D345CD95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3051ACBA-6CBF-4FA3-8452-23A2D345CD95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B13CBD19-5393-43A5-BD4D-D196D5E5AD39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B13CBD19-5393-43A5-BD4D-D196D5E5AD39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B13CBD19-5393-43A5-BD4D-D196D5E5AD39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B13CBD19-5393-43A5-BD4D-D196D5E5AD39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

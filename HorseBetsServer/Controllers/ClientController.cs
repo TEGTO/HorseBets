@@ -29,10 +29,10 @@ namespace HorseBets.Controllers
         }
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> CreateClientForUser([FromBody] CreateClientDto clientDto, CancellationToken cancelentionToken)
+        public async Task<ActionResult<CreateClientDto>> CreateClientForUser([FromBody] CreateClientDto clientDto, CancellationToken cancelentionToken)
         {
-            await clientManager.CreateClientForUserIdAsync(clientDto.UserId, cancelentionToken);
-            return Ok();
+            var newClient = await clientManager.CreateClientForUserIdAsync(clientDto.UserId, cancelentionToken);
+            return Ok(mapper.Map<ClientDto>(newClient));
         }
         [HttpPatch]
         [Route("balance/add")]

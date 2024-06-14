@@ -14,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
 builder.Services.AddCascadingAuthenticationState();
@@ -48,10 +50,8 @@ builder.Services.AddAuthentication(options =>
 
 ValidatorOptions.Global.LanguageManager.Enabled = false;
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+var connectionString = "userDb";
+builder.AddNpgsqlDbContext<ApplicationDbContext>(connectionString);
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -70,6 +70,18 @@ builder.Services.AddFluxor(options =>
     options.ScanAssemblies(currentAssembly));
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        dbContext.Database.Migrate();
+    }
+    app.CreateDbIfNotExists();
+}
+
+app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
     app.UseMigrationsEndPoint();

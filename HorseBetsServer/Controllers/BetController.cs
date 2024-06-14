@@ -42,8 +42,8 @@ namespace HorseBets.Controllers
         public async Task<ActionResult<BetDto>> CreateBet([FromBody] BetDto betDto, CancellationToken cancelentionToken)
         {
             Bet bet = mapper.Map<Bet>(betDto);
-            await betManager.CreateBetAsync(bet, cancelentionToken);
-            return await GetBetById(bet.Id, cancelentionToken);
+            Bet newBet = await betManager.CreateBetAsync(bet, cancelentionToken);
+            return mapper.Map<BetDto>(newBet);
         }
     }
 }
