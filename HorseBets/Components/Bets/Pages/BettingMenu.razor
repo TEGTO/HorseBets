@@ -14,7 +14,7 @@
 
 <PageTitle>Betting Menu</PageTitle>
 
- @if (ClientState != null && ClientState.Value.Client != null)
+ @if (ClientState != null && ClientState.Value.IsLoaded)
 {
     <div class="betting-menu">
         <AuthorizeView Roles="@adminName">

@@ -1,17 +1,16 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var betsDbName = "betsdb";
-var userDbName = "userdb";
-var db = builder.AddPostgres("db").WithPgAdmin();
+//var db = builder.AddPostgres("db").WithPgAdmin().WithDataVolume();
 
-var betsDb = db.AddDatabase(betsDbName);
-var userDb = db.AddDatabase(userDbName);
+//var betsDb = db.AddDatabase("betsdb");
+//var userDb = db.AddDatabase("userdb");
 
-var api = builder.AddProject<Projects.HorseBets_Api>("horsebets-api")
-    .WithReference(betsDb);
+var cache = builder.AddRedis("cache");
+
+var api = builder.AddProject<Projects.HorseBets_Api>("horsebets-api");
 
 builder.AddProject<Projects.HorseBets>("horsebets-frontend")
     .WithReference(api)
-    .WithReference(userDb);
+    .WithReference(cache);
 
 builder.Build().Run();

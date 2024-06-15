@@ -20,9 +20,9 @@ builder.Services.AddSingleton<IHorseService, HorseService>();
 builder.Services.AddSingleton<IBetService, BetService>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
-var connectionString = "betsdb";
-builder.AddNpgsqlDbContext<BetsDbContext>(connectionString);
-builder.Services.AddDbContextFactory<BetsDbContext>();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not found.");
+builder.Services.AddDbContextFactory<BetsDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddHttpsRedirection(options =>
 {
@@ -51,11 +51,6 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbContext = scope.ServiceProvider.GetRequiredService<BetsDbContext>();
-        dbContext.Database.Migrate();
-    }
     app.CreateDbIfNotExists();
 }
 

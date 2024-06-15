@@ -17,22 +17,16 @@ namespace HorseBets.Data
 
             var services = scope.ServiceProvider;
             var context = services.GetRequiredService<ApplicationDbContext>();
-            try
+            context.Database.EnsureCreated();
+            foreach (var role in RoleManager.GetRoles())
             {
-                context.Database.EnsureCreated();
-                foreach (var role in RoleManager.GetRoles())
+                context.Roles.Add(new IdentityRole
                 {
-                    context.Roles.Add(new IdentityRole
-                    {
-                        Name = role,
-                        NormalizedName = role.ToUpper(),
-                        Id = Guid.NewGuid().ToString(),
-                        ConcurrencyStamp = Guid.NewGuid().ToString()
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
+                    Name = role,
+                    NormalizedName = role.ToUpper(),
+                    Id = Guid.NewGuid().ToString(),
+                    ConcurrencyStamp = Guid.NewGuid().ToString()
+                });
             }
         }
     }

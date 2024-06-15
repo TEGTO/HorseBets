@@ -28,14 +28,8 @@ namespace HorseBets.Data
 
             var services = scope.ServiceProvider;
             var context = services.GetRequiredService<BetsDbContext>();
-            try
-            {
-                context.Database.EnsureCreated();
-                DevelopSeedData.SeedData(context);
-            }
-            catch (Exception ex)
-            {
-            }
+            context.Database.EnsureCreated();
+            DevelopSeedData.SeedData(context);
         }
     }
 }

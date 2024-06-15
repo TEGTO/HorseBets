@@ -50,8 +50,9 @@ builder.Services.AddAuthentication(options =>
 
 ValidatorOptions.Global.LanguageManager.Enabled = false;
 
-var connectionString = "userDb";
-builder.AddNpgsqlDbContext<ApplicationDbContext>(connectionString);
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -73,11 +74,6 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        dbContext.Database.Migrate();
-    }
     app.CreateDbIfNotExists();
 }
 
