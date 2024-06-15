@@ -16,6 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
+builder.AddRedisOutputCache("cache");
+
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
 builder.Services.AddCascadingAuthenticationState();
@@ -25,7 +27,7 @@ builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 builder.Services.AddHttpClient("bets", (httpClient) =>
 {
-    httpClient.BaseAddress = new Uri(builder.Configuration.GetConnectionString("BetsAPI")!);
+    httpClient.BaseAddress = new Uri(builder.Configuration.GetSection("BetsAPI").Value!);
 });
 builder.Services.AddScoped<RoleManager>();
 builder.Services.AddScoped<IClientApi, ClientApi>();
@@ -88,9 +90,10 @@ else
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 app.UseAntiforgery();
+app.UseOutputCache();
+
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

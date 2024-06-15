@@ -15,10 +15,6 @@ namespace HorseBets.Data
         public BetsDbContext(DbContextOptions<BetsDbContext> options) : base(options)
         {
         }
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-        }
     }
     public static class Extensions
     {
