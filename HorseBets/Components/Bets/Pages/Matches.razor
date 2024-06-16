@@ -1,9 +1,8 @@
 ﻿@page "/Matches"
-@using Microsoft.AspNetCore.OutputCaching
 @inject IMatchApi MatchService
 @rendermode InteractiveServer
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
-@attribute [OutputCache(Duration=5)]
+@attribute [OutputCache(Duration = 5, PolicyName = nameof(AuthCachePolicy))]
 
 <PageTitle>Matches</PageTitle>
 @if (matchesOnPage == null)

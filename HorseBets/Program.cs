@@ -1,3 +1,4 @@
+using AspireRedisTest.WebAppAuthorization;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Fluxor;
@@ -17,6 +18,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 builder.AddRedisOutputCache("cache");
+builder.Services.AddOutputCache(options =>
+{
+    options.AddPolicy(nameof(AuthCachePolicy), AuthCachePolicy.Instance);
+});
 
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
