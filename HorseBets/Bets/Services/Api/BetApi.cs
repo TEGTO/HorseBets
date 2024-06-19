@@ -4,7 +4,7 @@ namespace HorseBets.Bets.Services.Api
 {
     public class BetApi : BaseBetApiService, IBetApi
     {
-        public BetApi(IHttpClientFactory httpClientFactory, ILogger<BetApi> logger) : base(httpClientFactory, logger)
+        public BetApi(IHttpClientFactory httpClientFactory, ILogger<BaseBetApiService> logger) : base(httpClientFactory, logger)
         {
         }
 

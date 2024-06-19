@@ -2,10 +2,12 @@
 using HorseBets.Bets.Models;
 using HorseBets.Bets.Models.Dto;
 using HorseBets.Bets.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HorseBets.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class HorseController : ControllerBase
@@ -18,11 +20,11 @@ namespace HorseBets.Controllers
             this.horseService = horseService;
             this.mapper = mapper;
         }
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [Route("horses")]
-        public async Task<ActionResult<IEnumerable<HorseDto>>> GetAllHorses(CancellationToken cancelentionToken)
+        public async Task<ActionResult<IEnumerable<HorseDto>>> GetAllHorses(CancellationToken cancellationToken)
         {
-            IEnumerable<Horse> horses = await horseService.GetHorsesAsync(cancelentionToken);
+            IEnumerable<Horse> horses = await horseService.GetHorsesAsync(cancellationToken);
             if (horses == null)
                 return NotFound();
             return Ok(horses.Select(mapper.Map<HorseDto>));

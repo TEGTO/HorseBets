@@ -4,8 +4,12 @@ using HorseBets.Bets.Models.Dto;
 
 namespace HorseBets.Bets.Services.Api
 {
-    public class ClientApi(IHttpClientFactory httpClientFactory, ILogger<ClientApi> logger) : BaseBetApiService(httpClientFactory, logger), IClientApi
+    public class ClientApi : BaseBetApiService, IClientApi
     {
+        public ClientApi(IHttpClientFactory httpClientFactory, ILogger<BaseBetApiService> logger) : base(httpClientFactory, logger)
+        {
+        }
+
         public async Task<Client> GetClientByUserIdAsync(string userId, CancellationToken cancellationToken = default)
         {
             try

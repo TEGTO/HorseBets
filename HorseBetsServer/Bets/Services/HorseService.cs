@@ -1,4 +1,5 @@
-﻿using HorseBets.Bets.Models;
+﻿using HorseBets.Api.Shared.Services;
+using HorseBets.Bets.Models;
 using HorseBets.Data;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,7 +1,7 @@
 ﻿using HorseBets.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace HorseBets.Bets.Services
+namespace HorseBets.Api.Shared.Services
 {
     public abstract class ServiceDbBase
     {

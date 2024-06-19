@@ -7,6 +7,7 @@ using HorseBets.Bets.Services.Api;
 using HorseBets.Components;
 using HorseBets.Components.Account;
 using HorseBets.Data;
+using HorseBets.Handlers;
 using HorseBets.Middleware;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -26,14 +27,16 @@ builder.Services.AddOutputCache(options =>
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
 builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<IBetAuthService, BetAuthService>();
 builder.Services.AddScoped<UserManager<ApplicationUser>, IdentityUserManager>();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+builder.Services.AddScoped<BetApiLoginHandler>();
 builder.Services.AddHttpClient("bets", (httpClient) =>
 {
     httpClient.BaseAddress = new Uri(builder.Configuration.GetSection("BetsAPI").Value!);
-});
+}).AddHttpMessageHandler<BetApiLoginHandler>();
 builder.Services.AddScoped<RoleManager>();
 builder.Services.AddScoped<IClientApi, ClientApi>();
 builder.Services.AddScoped<IMatchApi, MatchApi>();

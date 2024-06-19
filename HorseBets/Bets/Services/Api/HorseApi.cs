@@ -2,8 +2,12 @@
 
 namespace HorseBets.Bets.Services.Api
 {
-    public class HorseApi(IHttpClientFactory httpClientFactory, ILogger<HorseApi> logger) : BaseBetApiService(httpClientFactory, logger), IHorseApi
+    public class HorseApi : BaseBetApiService, IHorseApi
     {
+        public HorseApi(IHttpClientFactory httpClientFactory, ILogger<BaseBetApiService> logger) : base(httpClientFactory, logger)
+        {
+        }
+
         public async Task<List<Horse>> GetAllHorsesAsync(CancellationToken cancellationToken = default)
         {
             try

@@ -7,10 +7,11 @@ namespace HorseBets.Bets.Services.Api
     {
         private readonly IValidator<Match> validator;
 
-        public MatchApi(IHttpClientFactory httpClientFactory, ILogger<MatchApi> logger, IValidator<Match> validator) : base(httpClientFactory, logger)
+        public MatchApi(IHttpClientFactory httpClientFactory, ILogger<BaseBetApiService> logger, IValidator<Match> validator) : base(httpClientFactory, logger)
         {
             this.validator = validator;
         }
+
         public async Task<Match?> GetMatchByIdAsync(int matchId, CancellationToken cancellationToken = default)
         {
             try
